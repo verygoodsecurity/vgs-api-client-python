@@ -13,8 +13,6 @@ from vgs_api_client.model.alias import Alias
 from vgs_api_client.model.alias_format import AliasFormat
 from vgs_api_client.model.api_error import ApiError
 from vgs_api_client.model.create_aliases_request import CreateAliasesRequest
-from vgs_api_client.model.create_aliases_request_existing import CreateAliasesRequestExisting
-from vgs_api_client.model.create_aliases_request_new import CreateAliasesRequestNew
 from vgs_api_client.model.inline_response200 import InlineResponse200
 from vgs_api_client.model.inline_response2001 import InlineResponse2001
 from vgs_api_client.model.inline_response201 import InlineResponse201

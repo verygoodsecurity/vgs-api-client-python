@@ -260,7 +260,7 @@ Name | Type | Description  | Notes
 
 Reveal multiple aliases
 
-Given a comma separated aliases string, retrieves all associated values stored in the vault.  **NOTE:** This endpoint may expose sensitive data. Therefore, it is disabled by default. To enable it, please contact your VGS account manager or drop us a line at [support@verygoodsecurity.com](mailto:support@verygoodsecurity.com). 
+Given a list of aliases, retrieves all associated values stored in the vault.  **NOTE:** This endpoint may expose sensitive data. Therefore, it is disabled by default. To enable it, please contact your VGS account manager or drop us a line at [support@verygoodsecurity.com](mailto:support@verygoodsecurity.com). 
 
 ### Example
 
@@ -294,7 +294,7 @@ configuration = vgs_api_client.Configuration(
 with vgs_api_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = aliases_api.AliasesApi(api_client)
-    q = "tok_sandbox_5UpnbMvaihRuRwz5QXwBFw, tok_sandbox_9ToiJHedw1nE1Jfx1qYYgz" # str | Comma-separated aliases string
+    q = "["tok_sandbox_5UpnbMvaihRuRwz5QXwBFw,tok_sandbox_9ToiJHedw1nE1Jfx1qYYgz"]" # str | Comma-separated list of aliases to reveal.
 
     # example passing only required values which don't have defaults set
     try:
@@ -310,7 +310,7 @@ with vgs_api_client.ApiClient(configuration) as api_client:
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **q** | **str**| Comma-separated aliases string |
+ **q** | **str**| Comma-separated list of aliases to reveal. |
 
 ### Return type
 
