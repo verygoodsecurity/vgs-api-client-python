@@ -13,7 +13,7 @@ jobs:
     steps:
       - checkout
       - run: |
-          ./run-test.sh
+          ./scripts/run-tests.sh
 
   publish:
     <<: *job-defaults
@@ -22,7 +22,7 @@ jobs:
       - run: |
           export LIB_VERSION=${CIRCLE_TAG}
 
-          ./publish.sh
+          ./scripts/publish.sh
 
 workflows:
   version: 2
