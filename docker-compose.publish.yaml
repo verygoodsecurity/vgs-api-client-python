@@ -4,7 +4,7 @@ services:
   build_and_publish:
     build:
       context: .
-      dockerfile: publish/Dockerfile
+      dockerfile: scripts/publish/Dockerfile
     environment:
-      PYPI_TOKEN: ${PYPI_TOKEN}
+      ARTIFACT_REPOSITORY_TOKEN: ${ARTIFACT_REPOSITORY_TOKEN}
       LIB_VERSION: ${LIB_VERSION}

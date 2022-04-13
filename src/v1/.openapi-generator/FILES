@@ -1,6 +1,5 @@
 .gitignore
 .gitlab-ci.yml
-.openapi-generator-ignore
 .travis.yml
 README.md
 docs/Alias.md
@@ -8,8 +7,6 @@ docs/AliasFormat.md
 docs/AliasesApi.md
 docs/ApiError.md
 docs/CreateAliasesRequest.md
-docs/CreateAliasesRequestNew.md
-docs/CreateAliasesRequestReference.md
 docs/InlineResponse200.md
 docs/InlineResponse2001.md
 docs/InlineResponse201.md
@@ -28,8 +25,6 @@ test/test_alias_format.py
 test/test_aliases_api.py
 test/test_api_error.py
 test/test_create_aliases_request.py
-test/test_create_aliases_request_new.py
-test/test_create_aliases_request_reference.py
 test/test_inline_response200.py
 test/test_inline_response2001.py
 test/test_inline_response201.py
@@ -50,8 +45,6 @@ vgs_api_client/model/alias.py
 vgs_api_client/model/alias_format.py
 vgs_api_client/model/api_error.py
 vgs_api_client/model/create_aliases_request.py
-vgs_api_client/model/create_aliases_request_new.py
-vgs_api_client/model/create_aliases_request_reference.py
 vgs_api_client/model/inline_response200.py
 vgs_api_client/model/inline_response2001.py
 vgs_api_client/model/inline_response201.py
@@ -60,5 +53,6 @@ vgs_api_client/model/revealed_data.py
 vgs_api_client/model/update_alias_request.py
 vgs_api_client/model/update_alias_request_data.py
 vgs_api_client/model_utils.py
+vgs_api_client/models/__init__.py
 vgs_api_client/models/__init__.py
 vgs_api_client/rest.py

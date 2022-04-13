@@ -2,9 +2,7 @@ import os
 import random
 import string
 
-import pytest
 import vgs
-from vgs import ApiException
 
 vgs.configure(
     username=os.environ["VAULT_API_USERNAME"],
@@ -18,12 +16,10 @@ def test_redact():
             format="UUID",
             value="5201784564572092",
             classifiers=["credit-card", "number"],
-            storage="PERSISTENT",
         ),
         dict(
             format="UUID",
             value="Joe Doe",
-            storage="VOLATILE",
         ),
     ]
     aliases = vgs.aliases.redact(data=data)
@@ -32,7 +28,6 @@ def test_redact():
     for index, item in enumerate(data):
         assert aliases[index]["value"] == item["value"]
         assert aliases[index]["aliases"][0]["alias"].startswith("tok_")
-        assert aliases[index]["storage"] == item["storage"]
     assert set(aliases[0]["classifiers"]) == set(data[0]["classifiers"])
     assert aliases[1]["classifiers"] == []
 
@@ -42,12 +37,10 @@ def test_reveal():
         dict(
             format="UUID",
             value="5201784564572092",
-            storage="PERSISTENT",
         ),
         dict(
             format="UUID",
             value="Joe Doe",
-            storage="VOLATILE",
         ),
     ]
     aliases = list(map(lambda i: i["aliases"][0]["alias"], vgs.aliases.redact(data=data)))
@@ -69,9 +62,6 @@ def test_delete():
     ]
     alias = list(map(lambda i: i["aliases"][0]["alias"], vgs.aliases.redact(data=data)))[0]
     vgs.aliases.delete(alias=alias)
-
-    with pytest.raises(ApiException):
-        vgs.aliases.reveal(alias)
 
 
 def test_update():
