@@ -28,7 +28,9 @@ class Aliases:
                 )
             create_aliases_request = CreateAliasesRequest(data=requests)
 
-            api_response = self._api.create_aliases(create_aliases_request=create_aliases_request)
+            api_response = self._api.create_aliases(
+                create_aliases_request=create_aliases_request
+            )
             return api_response["data"]
         except Exception as e:
             raise ApiException(e)
