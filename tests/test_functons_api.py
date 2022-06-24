@@ -87,6 +87,85 @@ def test_create_and_execute_md5():
     assert json.loads(result)["hash"] == "26a7740bab843e4e65da090555b0fffd"
 
 
+def test_create_and_execute_md5_on_secret_value():
+    api.create(
+        name="md5_on_secret_value",
+        language="larky",
+        definition="""
+            load("@stdlib/json", "json")
+            load("@stdlib//builtins", "builtins")
+            load("@vendor//Crypto/Hash", MD5="MD5")
+            load("@vgs//vault", "vault")
+
+            load("@vendor//Crypto/Util/py3compat", tobytes="tobytes",
+            bord="bord", tostr="tostr")
+
+
+            def process(input, ctx):
+                body = json.decode(str(input.body))
+                to_hash = vault.reveal(body['to_hash'])
+                md5 = MD5.new()
+                md5.update(tobytes(to_hash))
+                body['hash'] = md5.hexdigest()
+                input.body = builtins.bytes(json.encode(body))
+                return input
+            """,
+    )
+    redacted_value = api.invoke(name="redact_function", data=json.dumps({"secret": "blah_blah"}))
+    hashed_result = api.invoke(
+        name="md5_on_secret_value",
+        data=json.dumps({"to_hash": json.loads(redacted_value)["secret"]}),
+    )
+    print(hashed_result)
+    assert json.loads(hashed_result)["hash"] == "26a7740bab843e4e65da090555b0fffd"
+
+
+def test_create_and_execute_average_series_of_secret_values():
+    api.create(
+        name="redact_function2",
+        language="larky",
+        definition="""
+        load("@stdlib/json", "json")
+        load("@stdlib//builtins", "builtins")
+        load("@vgs//vault", "vault")
+
+        def process(input, ctx):
+            body = json.decode(str(input.body))
+            body['secret1'] = vault.redact(body['secret1'], format='UUID', storage='persistent')
+            body['secret2'] = vault.redact(body['secret2'], format='UUID', storage='persistent')
+            body['secret3'] = vault.redact(body['secret3'], format='UUID', storage='persistent')
+            input.body = builtins.bytes(json.encode(body))
+            return input
+        """,
+    )
+    api.create(
+        name="average_function",
+        language="larky",
+        definition="""
+        load("@stdlib/json", "json")
+        load("@stdlib//builtins", "builtins")
+        load("@vgs//vault", "vault")
+
+        def process(input, ctx):
+            body = json.decode(str(input.body))
+            secret1 = int(vault.reveal(body['secret1']))
+            secret2 = int(vault.reveal(body['secret2']))
+            secret3 = int(vault.reveal(body['secret3']))
+            average = (secret1 + secret2 + secret3) / 3
+            body['average'] = str(average)
+            input.body = builtins.bytes(json.encode(body))
+            return input
+        """,
+    )
+    redacted_result = api.invoke(
+        name="redact_function2",
+        data=json.dumps({"secret1": "20", "secret2": "15", "secret3": "10"}),
+    )
+    result = api.invoke(name="average_function", data=redacted_result)
+    print(result)
+    assert json.loads(result)["average"] == "15.0"
+
+
 def test_create_and_execute_multiple_functions():
     api.create(
         name="function_1",
