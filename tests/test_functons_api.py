@@ -11,8 +11,8 @@ config = vgs.config(
     password=os.environ["VAULT_API_PASSWORD"],
     vault_id=os.environ["VAULT_API_VAULT_ID"],
     # https://www.verygoodsecurity.com/docs/development/vgs-git-flow#1-login-with-vgs-account
-    service_account_name=os.environ["VAULT_API_SERVICE_ACCOUNT_NAME"],
-    service_account_password=os.environ["VAULT_API_SERVICE_ACCOUNT_PASSWORD"],
+    service_account_name=os.environ["VGS_CLIENT_ID"],
+    service_account_password=os.environ["VGS_CLIENT_SECRET"],
     environment="sandbox",
 )
 functions = Functions(config)
@@ -75,7 +75,6 @@ def test_get_nonexisting_function():
     assert "Function 'non_existing' not found" in str(e.value)
 
 
-@pytest.mark.skip(reason="Delete non existing route fails with 500 on vault management")
 def test_delete_nonexisting_function():
     with pytest.raises(NotFoundException) as e:
         functions.delete(name="non_existing")
@@ -271,12 +270,10 @@ def test_create_and_execute_multiple_functions():
     assert json.loads(result)["data"] == "012"
 
 
-@pytest.mark.skip(
-    reason="doesn't work right now. We need to fetch all functions to check if it exists"
-)
 def test_execute_non_existing_function():
-    with pytest.raises(FunctionsApiException):
+    with pytest.raises(FunctionsApiException) as e:
         functions.invoke(name="non-existing-function", data="whatever")
+    assert str(e.value) == "Function 'non-existing-function' doesn't exist."
 
 
 def test_create_function_with_invalid_config():
@@ -309,8 +306,8 @@ def test_invoke_function_with_invalid_config():
         vgs.config(
             vault_id=os.environ["VAULT_API_VAULT_ID"],
             host="https://api.sandbox.verygoodvault.com",
-            service_account_name=os.environ["VAULT_API_SERVICE_ACCOUNT_NAME"],
-            service_account_password=os.environ["VAULT_API_SERVICE_ACCOUNT_PASSWORD"],
+            service_account_name=os.environ["VGS_CLIENT_ID"],
+            service_account_password=os.environ["VGS_CLIENT_SECRET"],
             environment="sandbox",
         )
     )
